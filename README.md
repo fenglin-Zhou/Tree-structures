@@ -10,3 +10,10 @@ BST是比较简单的树结构，满足下面三个性质。
 ## [b-树（B-tree）](https://en.wikipedia.org/wiki/B-tree)
 ## [B+ tree](https://en.wikipedia.org/wiki/B%2B_tree)
 ## [红黑树 Red–black tree](https://en.wikipedia.org/wiki/Red%E2%80%93black_tree)
+
+## how to build
+```
+cmake .
+make
+./tree
+```

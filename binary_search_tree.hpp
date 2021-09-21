@@ -23,6 +23,7 @@
 
 
 #include <iostream>
+#include <queue>
 #include <memory>
 
 template<typename K, typename V>
@@ -68,18 +69,18 @@ void Node<K, V>::setKey(K key) {
 template<typename K, typename V>
 class BSTNode {
     std::shared_ptr<Node<K, V> > root_;
-    bool insert(std::shared_ptr<Node<K, V> >, K, V);
-    void deleteKey(std::shared_ptr<Node<K, V> >, K);
+    void insert(std::shared_ptr<Node<K, V> >&, K, V);
+    void deleteKey(std::shared_ptr<Node<K, V> >&, K);
     std::shared_ptr<Node<K, V> > findMax(std::shared_ptr<Node<K, V> >);
     std::shared_ptr<Node<K, V> > findMin(std::shared_ptr<Node<K, V> >);
 public:
     BSTNode();
     BSTNode(K, V);
     ~BSTNode(){}
-    std::shared_ptr<Node<K, V> > createNode(K, V);
-    bool insertElem(K, V);
+    void insertElem(K, V);
     void deleteElem(K);
     std::shared_ptr<Node<K, V> > searchElem(K);
+    void display();
 };
 
 template<typename K, typename V>
@@ -89,40 +90,32 @@ BSTNode<K, V>::BSTNode() {
 
 template<typename K, typename V>
 BSTNode<K, V>::BSTNode(K key, V value) {
-    root_ = createNode(key, value);
+    root_ = std::make_shared<Node<K, V> >(key, value);
 }
 
 template<typename K, typename V>
-std::shared_ptr<Node<K, V> > BSTNode<K, V>::createNode(K key, V value) {
-    std::shared_ptr<Node<K, V> > node = std::make_shared<Node<K, V> >(key, value);
-    return node;
-}
-
-template<typename K, typename V>
-bool BSTNode<K, V>::insertElem(K key, V value) {
+void BSTNode<K, V>::insertElem(K key, V value) {
     if(root_ == nullptr) {
-        root_ = createNode(key, value);
-        return true;
+        root_ = std::make_shared<Node<K, V> >(key, value);
+        return;
     }
-    return insert(root_, key, value);
+    insert(root_, key, value);
 }
 
 template<typename K, typename V>
-bool BSTNode<K, V>::insert(std::shared_ptr<Node<K, V> > node, K key, V value) {
+void BSTNode<K, V>::insert(std::shared_ptr<Node<K, V> > &node, K key, V value) {
     if(node == nullptr) {
-        node = createNode(key, value);
-        return true;
+        node = std::make_shared<Node<K, V> >(key, value);
+        return;
     }
     if(node->getKey() < key) {
-        return insert(node->right_, key, value);
+        insert(node->right_, key, value);
     } else if(key < node->getKey()) {
-        return insert(node->left_, key, value);
-    } else if(key == node->getKey()){
+        insert(node->left_, key, value);
+    } else {
         std::cout << "newkey:" << key << "has existed\n" << std::endl;
         std::cout << "You are trying to insert an existing element, please try again!\n";
-        return false;
     }
-    return false;
 }
 
 template<typename K, typename V>
@@ -131,14 +124,14 @@ void BSTNode<K, V>::deleteElem(K key) {
 }
 
 template<typename K, typename V>
-void BSTNode<K, V>::deleteKey(std::shared_ptr<Node<K, V> > node, K key) {
+void BSTNode<K, V>::deleteKey(std::shared_ptr<Node<K, V> > &node, K key) {
     if(node == nullptr) {
         return;
     }
     if(node->getKey() < key) {
-        return deleteKey(node->right, key);
+        deleteKey(node->right_, key);
     } else if(key < node->getKey()) {
-        return deleteKey(node->left, key);
+        deleteKey(node->left_, key);
     } else if(key == node->getKey()) {
         if(node->left_ == nullptr && node->right_ == nullptr) {
             node = nullptr;
@@ -155,7 +148,6 @@ void BSTNode<K, V>::deleteKey(std::shared_ptr<Node<K, V> > node, K key) {
             deleteKey(node->right_, next->getKey());
         }
     }
-    return;
 }
 
 template<typename K, typename V>
@@ -194,4 +186,32 @@ std::shared_ptr<Node<K, V> > BSTNode<K, V>::searchElem(K key) {
     }
     std::cout << "Not found!\n";
     return nullptr;
+}
+
+template<typename K, typename V>
+void BSTNode<K, V>::display() {
+    std::queue<std::shared_ptr<Node<K, V> > > q;
+    std::cout << "------- display BST tree ----------\n";
+    if (root_ == nullptr) {
+        std::cout << " No elements !\n";
+    }
+    int level = 1;
+    q.push(root_);
+    while(!q.empty()) {
+        int len = q.size();
+        std::cout << "------- level  " << level++ << " -------\n";
+        for(int i = 0; i < len; ++i) {
+            std::shared_ptr<Node<K, V> > temp = q.front();
+            q.pop();
+            std::cout << " key:" << temp->getKey() << " value:"
+                    << temp->getValue();
+            if(temp->left_ != nullptr) {
+                q.push(temp->left_);
+            }
+            if(temp->right_ != nullptr) {
+                q.push(temp->right_);
+            }
+        }
+        std::cout << std::endl;
+    }
 }
