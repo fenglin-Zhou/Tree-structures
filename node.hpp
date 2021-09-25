@@ -21,20 +21,52 @@
 // SOFTWARE.
 
 #include <iostream>
-#include "binary_search_tree.hpp"
+#include <queue>
+#include <memory>
 
-void test_bst() {
-    BSTree<int, int> bst;
-    bst.insertElem(2,2);
-    bst.insertElem(4,4);
-    bst.insertElem(3,3);
-    bst.insertElem(1,1);
-    std::shared_ptr<Node<int, int> > node= bst.searchElem(1);
-    bst.deleteElem(1);
-    bst.display();
+template<typename K, typename V>
+class Node{
+    K key_;
+    V value_;
+public:
+    std::shared_ptr<Node<K, V> > left_;
+    std::shared_ptr<Node<K, V> > right_;
+    Node(K, V);
+    Node(){}
+    ~Node(){}
+    K getKey() const;
+    V getValue() const;
+    void setValue(V);
+    void setKey(K);
+    void display();
+};
+
+template<typename K, typename V>
+Node<K, V>::Node(const K key, const V value){
+    key_ = key;
+    value_ = value;
+    left_ = nullptr;
+    right_ = nullptr;
 }
 
-int main(){
-    test_bst();
-    return 0;
+template<typename K, typename V>
+K Node<K, V>::getKey() const { return key_; }
+
+template<typename K, typename V>
+V Node<K, V>::getValue() const { return value_; }
+
+template<typename K, typename V>
+void Node<K, V>::setValue(V value) {
+    value_ = value;
+}
+
+template<typename K, typename V>
+void Node<K, V>::setKey(K key) {
+    key_ = key;
+}
+
+template<typename K, typename V>
+void Node<K, V>::display() {
+    std::cout << "key:" << key_ << " value:"
+                    << value_ << std::endl;
 }

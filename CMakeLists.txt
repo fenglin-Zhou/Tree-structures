@@ -3,5 +3,5 @@ project(tree)
 set(CMAKE_CXX_STANDARD 20)
 
 find_package(Threads)
-add_executable(tree main.cc binary_search_tree.hpp)
+add_executable(tree main.cc node.hpp binary_search_tree.hpp avl_tree.hpp)
 target_link_libraries(tree ${CMAKE_THREAD_LIBS_INIT})

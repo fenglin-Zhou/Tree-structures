@@ -25,58 +25,19 @@
 #include <iostream>
 #include <queue>
 #include <memory>
+#include "node.hpp"
 
 template<typename K, typename V>
-class Node{
-    K key_;
-    V value_;
-public:
-    std::shared_ptr<Node<K, V> > left_;
-    std::shared_ptr<Node<K, V> > right_;
-    Node(K, V);
-    Node(){}
-    ~Node(){}
-    K getKey() const;
-    V getValue() const;
-    void setValue(V);
-    void setKey(K);
-};
-
-template<typename K, typename V>
-Node<K, V>::Node(const K key, const V value){
-    key_ = key;
-    value_ = value;
-    left_ = nullptr;
-    right_ = nullptr;
-}
-
-template<typename K, typename V>
-K Node<K, V>::getKey() const { return key_; }
-
-template<typename K, typename V>
-V Node<K, V>::getValue() const { return value_; }
-
-template<typename K, typename V>
-void Node<K, V>::setValue(V value) {
-    value_ = value;
-}
-
-template<typename K, typename V>
-void Node<K, V>::setKey(K key) {
-    key_ = key;
-}
-
-template<typename K, typename V>
-class BSTNode {
+class BSTree {
     std::shared_ptr<Node<K, V> > root_;
     void insert(std::shared_ptr<Node<K, V> >&, K, V);
     void deleteKey(std::shared_ptr<Node<K, V> >&, K);
     std::shared_ptr<Node<K, V> > findMax(std::shared_ptr<Node<K, V> >);
     std::shared_ptr<Node<K, V> > findMin(std::shared_ptr<Node<K, V> >);
 public:
-    BSTNode();
-    BSTNode(K, V);
-    ~BSTNode(){}
+    BSTree();
+    BSTree(K, V);
+    ~BSTree(){}
     void insertElem(K, V);
     void deleteElem(K);
     std::shared_ptr<Node<K, V> > searchElem(K);
@@ -84,17 +45,17 @@ public:
 };
 
 template<typename K, typename V>
-BSTNode<K, V>::BSTNode() {
+BSTree<K, V>::BSTree() {
     root_ = nullptr;
 }
 
 template<typename K, typename V>
-BSTNode<K, V>::BSTNode(K key, V value) {
+BSTree<K, V>::BSTree(K key, V value) {
     root_ = std::make_shared<Node<K, V> >(key, value);
 }
 
 template<typename K, typename V>
-void BSTNode<K, V>::insertElem(K key, V value) {
+void BSTree<K, V>::insertElem(K key, V value) {
     if(root_ == nullptr) {
         root_ = std::make_shared<Node<K, V> >(key, value);
         return;
@@ -103,7 +64,7 @@ void BSTNode<K, V>::insertElem(K key, V value) {
 }
 
 template<typename K, typename V>
-void BSTNode<K, V>::insert(std::shared_ptr<Node<K, V> > &node, K key, V value) {
+void BSTree<K, V>::insert(std::shared_ptr<Node<K, V> > &node, K key, V value) {
     if(node == nullptr) {
         node = std::make_shared<Node<K, V> >(key, value);
         return;
@@ -119,12 +80,12 @@ void BSTNode<K, V>::insert(std::shared_ptr<Node<K, V> > &node, K key, V value) {
 }
 
 template<typename K, typename V>
-void BSTNode<K, V>::deleteElem(K key) {
+void BSTree<K, V>::deleteElem(K key) {
     deleteKey(root_, key);
 }
 
 template<typename K, typename V>
-void BSTNode<K, V>::deleteKey(std::shared_ptr<Node<K, V> > &node, K key) {
+void BSTree<K, V>::deleteKey(std::shared_ptr<Node<K, V> > &node, K key) {
     if(node == nullptr) {
         return;
     }
@@ -134,6 +95,8 @@ void BSTNode<K, V>::deleteKey(std::shared_ptr<Node<K, V> > &node, K key) {
         deleteKey(node->left_, key);
     } else if(key == node->getKey()) {
         if(node->left_ == nullptr && node->right_ == nullptr) {
+            std::cout << "remove: ";
+            node->display();
             node = nullptr;
             return;
         } else if(node->left_ != nullptr) {
@@ -151,7 +114,7 @@ void BSTNode<K, V>::deleteKey(std::shared_ptr<Node<K, V> > &node, K key) {
 }
 
 template<typename K, typename V>
-std::shared_ptr<Node<K, V> > BSTNode<K, V>::findMax(std::shared_ptr<Node<K, V> > node) {
+std::shared_ptr<Node<K, V> > BSTree<K, V>::findMax(std::shared_ptr<Node<K, V> > node) {
     if(node->right_ != nullptr) {
         node = node->right_;
     }
@@ -159,7 +122,7 @@ std::shared_ptr<Node<K, V> > BSTNode<K, V>::findMax(std::shared_ptr<Node<K, V> >
 }
 
 template<typename K, typename V>
-std::shared_ptr<Node<K, V> > BSTNode<K, V>::findMin(std::shared_ptr<Node<K, V> > node) {
+std::shared_ptr<Node<K, V> > BSTree<K, V>::findMin(std::shared_ptr<Node<K, V> > node) {
     if(node->left_ != nullptr) {
         node = node->left_;
     }
@@ -167,7 +130,7 @@ std::shared_ptr<Node<K, V> > BSTNode<K, V>::findMin(std::shared_ptr<Node<K, V> >
 }
 
 template<typename K, typename V>
-std::shared_ptr<Node<K, V> > BSTNode<K, V>::searchElem(K key) {
+std::shared_ptr<Node<K, V> > BSTree<K, V>::searchElem(K key) {
     if(root_ == nullptr){
         std::cout << "Not found!\n";
         return nullptr;
@@ -189,9 +152,9 @@ std::shared_ptr<Node<K, V> > BSTNode<K, V>::searchElem(K key) {
 }
 
 template<typename K, typename V>
-void BSTNode<K, V>::display() {
+void BSTree<K, V>::display() {
     std::queue<std::shared_ptr<Node<K, V> > > q;
-    std::cout << "------- display BST tree ----------\n";
+    std::cout << "------- display BSTree ----------\n";
     if (root_ == nullptr) {
         std::cout << " No elements !\n";
     }
@@ -203,8 +166,7 @@ void BSTNode<K, V>::display() {
         for(int i = 0; i < len; ++i) {
             std::shared_ptr<Node<K, V> > temp = q.front();
             q.pop();
-            std::cout << " key:" << temp->getKey() << " value:"
-                    << temp->getValue();
+            temp->display();
             if(temp->left_ != nullptr) {
                 q.push(temp->left_);
             }
@@ -212,6 +174,5 @@ void BSTNode<K, V>::display() {
                 q.push(temp->right_);
             }
         }
-        std::cout << std::endl;
     }
 }
