@@ -20,6 +20,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+#ifndef _NODE_H_
+#define _NODE_H_
+
 #include <iostream>
 #include <queue>
 #include <memory>
@@ -39,6 +42,9 @@ public:
     void setValue(V);
     void setKey(K);
     void display();
+    int height();
+    int leftHeight();
+    int rightHeight();
 };
 
 template<typename K, typename V>
@@ -47,6 +53,28 @@ Node<K, V>::Node(const K key, const V value){
     value_ = value;
     left_ = nullptr;
     right_ = nullptr;
+}
+
+template<typename K, typename V>
+int Node<K, V>::leftHeight(){
+    if(left_ == nullptr){
+        return 0;
+    }
+    return left_->height();
+}
+
+template<typename K, typename V>
+int Node<K, V>::rightHeight() {
+    if(right_ == nullptr){
+        return 0;
+    }
+    return right_->height();
+}
+
+template<typename K, typename V>
+int Node<K, V>::height() {
+    return std::max(left_ == nullptr ? 0 : left_->height(),
+     right_ == nullptr ? 0 : right_->height()) + 1;
 }
 
 template<typename K, typename V>
@@ -70,3 +98,5 @@ void Node<K, V>::display() {
     std::cout << "key:" << key_ << " value:"
                     << value_ << std::endl;
 }
+
+#endif

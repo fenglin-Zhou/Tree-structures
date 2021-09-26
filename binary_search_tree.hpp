@@ -20,7 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-
+#ifndef _BINARYSEARCHTREE_H_
+#define _BINARYSEARCHTREE_H_
 
 #include <iostream>
 #include <queue>
@@ -154,7 +155,7 @@ std::shared_ptr<Node<K, V> > BSTree<K, V>::searchElem(K key) {
 template<typename K, typename V>
 void BSTree<K, V>::display() {
     std::queue<std::shared_ptr<Node<K, V> > > q;
-    std::cout << "------- display BSTree ----------\n";
+    std::cout << "------- Display BSTree ----------\n";
     if (root_ == nullptr) {
         std::cout << " No elements !\n";
     }
@@ -176,3 +177,5 @@ void BSTree<K, V>::display() {
         }
     }
 }
+
+#endif

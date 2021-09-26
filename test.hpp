@@ -23,11 +23,31 @@
 #include <iostream>
 #include "binary_search_tree.hpp"
 #include "avl_tree.hpp"
-#include "test.hpp"
 
-int main(){
-    test_bst();
-    std::cout << std::endl;
-    test_avlt();
-    return 0;
+void test_bst() {
+    BSTree<int, int> bst;
+    bst.insertElem(2,2);
+    bst.insertElem(4,4);
+    bst.insertElem(7,7);
+    bst.insertElem(9,9);
+    bst.insertElem(5,5);
+    bst.insertElem(3,3);
+    bst.insertElem(1,1);
+    std::shared_ptr<Node<int, int> > node = bst.searchElem(1);
+    bst.deleteElem(1);
+    bst.display();
+}
+
+void test_avlt() {
+    AVLTree<int, int> avlt;
+    avlt.insertElem(2,2);
+    avlt.insertElem(4,4);
+    avlt.insertElem(7,7);
+    avlt.insertElem(9,9);
+    avlt.insertElem(5,5);
+    avlt.insertElem(3,3);
+    avlt.insertElem(1,1);
+    std::shared_ptr<Node<int, int> > node = avlt.searchElem(1);
+    avlt.deleteElem(1);
+    avlt.display();
 }
