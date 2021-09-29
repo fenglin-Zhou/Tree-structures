@@ -9,8 +9,8 @@
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
 
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
 
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -24,79 +24,84 @@
 #define _NODE_H_
 
 #include <iostream>
-#include <queue>
 #include <memory>
+#include <queue>
 
-template<typename K, typename V>
-class Node{
-    K key_;
-    V value_;
-public:
-    std::shared_ptr<Node<K, V> > left_;
-    std::shared_ptr<Node<K, V> > right_;
-    Node(K, V);
-    Node(){}
-    ~Node(){}
-    K getKey() const;
-    V getValue() const;
-    void setValue(V);
-    void setKey(K);
-    void display();
-    int height();
-    int leftHeight();
-    int rightHeight();
+template <typename K, typename V>
+class Node {
+  K key_;
+  V value_;
+
+ public:
+  std::shared_ptr<Node<K, V> > left_;
+  std::shared_ptr<Node<K, V> > right_;
+  Node(K, V);
+  Node() {}
+  ~Node() {}
+  K getKey() const;
+  V getValue() const;
+  void setValue(V);
+  void setKey(K);
+  void display();
+  int height();
+  int leftHeight();
+  int rightHeight();
 };
 
-template<typename K, typename V>
-Node<K, V>::Node(const K key, const V value){
-    key_ = key;
-    value_ = value;
-    left_ = nullptr;
-    right_ = nullptr;
+template <typename K, typename V>
+Node<K, V>::Node(const K key, const V value) {
+  key_ = key;
+  value_ = value;
+  left_ = nullptr;
+  right_ = nullptr;
 }
 
-template<typename K, typename V>
-int Node<K, V>::leftHeight(){
-    if(left_ == nullptr){
-        return 0;
-    }
-    return left_->height();
+template <typename K, typename V>
+int Node<K, V>::leftHeight() {
+  if (left_ == nullptr) {
+    return 0;
+  }
+  return left_->height();
 }
 
-template<typename K, typename V>
+template <typename K, typename V>
 int Node<K, V>::rightHeight() {
-    if(right_ == nullptr){
-        return 0;
-    }
-    return right_->height();
+  if (right_ == nullptr) {
+    return 0;
+  }
+  return right_->height();
 }
 
-template<typename K, typename V>
+template <typename K, typename V>
 int Node<K, V>::height() {
-    return std::max(left_ == nullptr ? 0 : left_->height(),
-     right_ == nullptr ? 0 : right_->height()) + 1;
+  return std::max(left_ == nullptr ? 0 : left_->height(),
+                  right_ == nullptr ? 0 : right_->height()) +
+         1;
 }
 
-template<typename K, typename V>
-K Node<K, V>::getKey() const { return key_; }
+template <typename K, typename V>
+K Node<K, V>::getKey() const {
+  return key_;
+}
 
-template<typename K, typename V>
-V Node<K, V>::getValue() const { return value_; }
+template <typename K, typename V>
+V Node<K, V>::getValue() const {
+  return value_;
+}
 
-template<typename K, typename V>
+template <typename K, typename V>
 void Node<K, V>::setValue(V value) {
-    value_ = value;
+  value_ = value;
 }
 
-template<typename K, typename V>
+template <typename K, typename V>
 void Node<K, V>::setKey(K key) {
-    key_ = key;
+  key_ = key;
 }
 
-template<typename K, typename V>
+template <typename K, typename V>
 void Node<K, V>::display() {
-    std::cout << "key:" << key_ << " value:"
-                    << value_ << std::endl;
+  std::cout << "key:" << key_ << " value:" << value_ << std::endl;
 }
 
 #endif
