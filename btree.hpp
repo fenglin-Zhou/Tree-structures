@@ -24,7 +24,7 @@
 #define _BTREE_H_
 
 #include <iostream>
-#include <vector>
+#include <queue>
 
 template <typename T>
 class BTree;
@@ -41,13 +41,32 @@ class BTNode {
   int keycount_;
   // Is true when node is leaf
   bool isleaf_;
+  // find the index of the key which is greater than or equal to key
+  int findkey(T key);
+  // remove the key which is in a leaf node
+  void removefromleaf(int idx);
+  // remove the key which is a non-leaf node
+  void removefromnonleaf(int idx);
+  // get the predecessor of the key
+  T getpred(int idx);
+  // get the successor of the key
+  T getsucc(int idx);
+  // fill up th child node
+  void fill(int idx);
+  // borrow a key from the child_[idx-1]th node and place it in child_[idx]
+  void borrowfromprev(int idx);
+  // borrow a key from the child_[idx+1]th node and place it in child_[idx]
+  void borrowfromnext(int idx);
+  // merge idx-th child with idx+1 child
+  void merge(int idx);
 
  public:
   BTNode(int degree, bool leaf);
   void insertnonfull(T key);
-  void splitchild(int index, BTNode* node);
-  void traverse();
+  void splitchild(int index, BTNode<T>* node);
+  void display();
   BTNode<T>* search(T key);
+  void remove(T key);
 
   friend class BTree<T>;
 };
@@ -59,17 +78,12 @@ class BTree {
 
  public:
   BTree(int degree) : root_(nullptr), degree_(degree) {}
-  void traverse() {
-    if (root_ != nullptr) {
-      std::cout << "------- Display BTree ----------\n";
-      root_->traverse();
-    }
-  }
+  void display();
   BTNode<T>* search(T key) {
     return (root_ != nullptr) ? root_->search(key) : nullptr;
   }
-
   void insert(T key);
+  void remove(T key);
 };
 
 template <typename T>
@@ -77,24 +91,197 @@ BTNode<T>::BTNode(int degree, bool leaf) {
   degree_ = degree;
   isleaf_ = leaf;
   keys_ = new T[2 * degree_ - 1];
-  child_ = new BTNode*[2 * degree_];
+  child_ = new BTNode<T>*[2 * degree_];
   keycount_ = 0;
 }
 
 template <typename T>
-void BTNode<T>::traverse() {
-  int i = 0;
-  for (i = 0; i < keycount_; ++i) {
-    if (isleaf_ == false) {
-      child_[i]->traverse();
+int BTNode<T>::findkey(T key) {
+  int index = 0;
+  while (index < keycount_ && keys_[index] < key) {
+    ++index;
+  }
+  return index;
+}
+
+template <typename T>
+void BTNode<T>::removefromleaf(int idx) {
+  for (int i = idx + 1; i < keycount_; ++i) {
+    keys_[i - 1] = keys_[i];
+  }
+  keycount_ -= 1;
+}
+
+template <typename T>
+T BTNode<T>::getpred(int idx) {
+  BTNode<T>* cur = child_[idx];
+  while (!cur->isleaf_) {
+    cur = cur->child_[cur->keycount_];
+  }
+  return cur->keys_[cur->keycount_ - 1];
+}
+
+template <typename T>
+T BTNode<T>::getsucc(int idx) {
+  BTNode<T>* cur = child_[idx + 1];
+  while (!cur->isleaf_) {
+    cur = cur->child_[0];
+  }
+  return cur->keys_[0];
+}
+
+template <typename T>
+void BTNode<T>::removefromnonleaf(int idx) {
+  T key = keys_[idx];
+  // if the child[idx] has atleast degree keys, find the maximum key int child
+  // and replace key by pred, then delete pred;
+  if (child_[idx]->keycount_ >= degree_) {
+    T pred = getpred(idx);
+    keys_[idx] = pred;
+    child_[idx]->remove(pred);
+  }
+  // if the child[idx+1] has atleast degree keys, find the minimum key int child
+  // and replace key by succ, then delete succ;
+  else if (child_[idx + 1]->keycount_ >= degree_) {
+    T succ = getsucc(idx);
+    keys_[idx] = succ;
+    child_[idx + 1]->remove(succ);
+  }
+  // if both child[idx] ans child[idx+1] has less that degree keys,merge them
+  // remove the key which is in child[idx] now
+  else {
+    merge(idx);
+    child_[idx]->remove(key);
+  }
+}
+
+template <typename T>
+void BTNode<T>::fill(int idx) {
+  // borrow a key from prev or next
+  if (idx != 0 && child_[idx - 1]->keycount_ >= degree_) {
+    borrowfromprev(idx);
+  } else if (idx != keycount_ && child_[idx + 1]->keycount_ >= degree_) {
+    borrowfromnext(idx);
+  } else {
+    if (idx != keycount_) {
+      merge(idx);
+    } else {
+      merge(idx - 1);
     }
-    std::cout << " " << keys_[i];
   }
-  std::cout << std::endl;
-  // the last child_, You can also modify the for loop implement it
-  if (isleaf_ == false) {
-    child_[i]->traverse();
+}
+
+template <typename T>
+void BTNode<T>::borrowfromprev(int idx) {
+  BTNode<T>* child = child_[idx];
+  BTNode<T>* sibling = child_[idx - 1];
+  // Move all keys in C[idx] one step backward
+  for (int i = child->keycount_ - 1; i >= 0; --i) {
+    child->keys_[i + 1] = child->keys_[i];
   }
+  // If C[idx] is not a leaf, move all its child pointers one step backword
+  if (!child->isleaf_) {
+    for (int i = child->keycount_; i >= 0; --i) {
+      child->child_[i + 1] = child->child_[i];
+    }
+  }
+  child->keys_[0] = keys_[idx - 1];
+  if (!child->isleaf_) {
+    child->child_[0] = sibling->child_[sibling->keycount_];
+  }
+  keys_[idx - 1] = sibling->keys_[sibling->keycount_ - 1];
+  child->keycount_ += 1;
+  sibling->keycount_ -= 1;
+}
+
+template <typename T>
+void BTNode<T>::borrowfromnext(int idx) {
+  BTNode<T>* child = child_[idx];
+  BTNode<T>* sibling = child_[idx + 1];
+  child->keys_[child->keycount_] = keys_[idx];
+  if (!child->isleaf_) {
+    child->child_[child->keycount_ + 1] = sibling->child_[0];
+  }
+  keys_[idx] = sibling->keys_[0];
+  for (int i = 1; i < sibling->keycount_; ++i) {
+    sibling->keys_[i - 1] = sibling->keys_[i];
+  }
+  if (!sibling->isleaf_) {
+    for (int i = 1; i < sibling->keycount_; ++i) {
+      sibling->child_[i - 1] = sibling->child_[i];
+    }
+  }
+  child->keycount_ += 1;
+  sibling->keycount_ -= 1;
+}
+
+template <typename T>
+void BTNode<T>::remove(T key) {
+  // find the index of the key which is greater than or equal to key
+  int index = findkey(key);
+  // the key in this node
+  if (index < keycount_ && keys_[index] == key) {
+    if (isleaf_) {
+      // the node is a leaf
+      removefromleaf(index);
+    } else {
+      // the node is not a leaf
+      removefromnonleaf(index);
+    }
+  } else {
+    if (isleaf_) {
+      std::cout << "The key " << key << " is does not exist\n";
+      return;
+    }
+    // The flag indicates whether the key is present in the sub-tree rooted
+    // with the last child of this node
+    bool flag = ((index == keycount_) ? true : false);
+    // child[index] where the key is supposed to exist  has less that degree
+    // keys, fill that child
+    if (child_[index]->keycount_ < degree_) {
+      fill(index);
+    }
+    // When has less degree keys in before and after child, the
+    // merge will cause the current node keycount to decrease, then the key to
+    // be removed appears in the child_[indx-1]
+    if (flag && index > keycount_) {
+      child_[index - 1]->remove(key);
+    } else {
+      child_[index]->remove(key);
+    }
+  }
+}
+
+template <typename T>
+void BTNode<T>::merge(int idx) {
+  BTNode<T>* child = child_[idx];
+  BTNode<T>* sibling = child_[idx + 1];
+  child->keys_[degree_ - 1] = keys_[idx];
+  for (int i = 0; i < sibling->keycount_; ++i) {
+    child->keys_[i + degree_] = sibling->keys_[i];
+  }
+  if (!child->isleaf_) {
+    for (int i = 0; i < sibling->keycount_; ++i) {
+      child->child_[i + degree_] = sibling->child_[i];
+    }
+  }
+  for (int i = idx + 1; i < keycount_; ++i) {
+    keys_[i - 1] = keys_[i];
+  }
+  for (int i = idx + 2; i <= keycount_; ++i) {
+    child_[i - 1] = child_[i];
+  }
+  child->keycount_ += sibling->keycount_ + 1;
+  keycount_--;
+  delete (sibling);
+}
+
+template <typename T>
+void BTNode<T>::display() {
+  for (int i = 0; i < keycount_; ++i) {
+    std::cout << keys_[i] << " ";
+  }
+  // std::cout << keycount_ << " ";
 }
 template <typename T>
 void BTNode<T>::insertnonfull(T key) {
@@ -124,7 +311,7 @@ void BTNode<T>::insertnonfull(T key) {
 }
 
 template <typename T>
-void BTNode<T>::splitchild(int index, BTNode* node) {
+void BTNode<T>::splitchild(int index, BTNode<T>* node) {
   // create a new node which is going to store last (degree-1) keys of node
   // node->kyes_ 0, degree-1, degree, 2degree-1
   //             | - - - - - |  -  | - - - - - |
@@ -194,6 +381,49 @@ void BTree<T>::insert(T key) {
       root_ = temp;
     } else {
       root_->insertnonfull(key);
+    }
+  }
+}
+
+template <typename T>
+void BTree<T>::remove(T key) {
+  if (root_ == nullptr) {
+    std::cout << "The tree is empty\n";
+    return;
+  }
+  root_->remove(key);
+  if (root_->keycount_ == 0) {
+    BTNode<T>* temp = root_;
+    if (root_->isleaf_) {
+      root_ = nullptr;
+    } else {
+      root_ = root_->child_[0];
+    }
+    delete temp;
+  }
+}
+
+template <typename T>
+void BTree<T>::display() {
+  if (root_ != nullptr) {
+    std::cout << "-------- Display BTree ------\n";
+    std::queue<BTNode<T>*> q;
+    int level = 1;
+    q.push(root_);
+    while (!q.empty()) {
+      int len = q.size();
+      std::cout << "------- level " << level++ << " ------\n";
+      for (int i = 0; i < len; ++i) {
+        BTNode<T>* temp = q.front();
+        q.pop();
+        std::cout << " " << i << ":";
+        temp->display();
+        if (!temp->isleaf_)
+          for (int j = 0; j <= temp->keycount_; ++j) {
+            q.push(temp->child_[j]);
+          }
+      }
+      std::cout << std::endl;
     }
   }
 }

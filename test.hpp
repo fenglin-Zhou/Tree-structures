@@ -56,15 +56,18 @@ void test_avlt() {
 
 void test_btree() {
   BTree<int> btree(3);
-  btree.insert(1);
-  btree.insert(2);
-  btree.insert(3);
-  btree.insert(4);
-  btree.insert(5);
-  btree.insert(6);
-  btree.insert(7);
-  btree.insert(8);
-  btree.insert(9);
+  int num[23] = {1,  3,  7,  10, 11, 13, 14, 15, 18, 16, 19, 24,
+                 25, 26, 21, 4,  5,  20, 22, 2,  17, 12, 6};
+  for (int i = 0; i < 23; ++i) {
+    btree.insert(num[i]);
+  }
   BTNode<int>* node = btree.search(6);
-  btree.traverse();
+  btree.display();
+  btree.remove(6);
+  btree.remove(13);
+  btree.remove(7);
+  btree.remove(4);
+  btree.remove(2);
+  btree.remove(16);
+  btree.display();
 }
