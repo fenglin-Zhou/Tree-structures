@@ -27,9 +27,12 @@
 #include "test.hpp"
 
 int main() {
-  test_bst();
-  std::cout << std::endl;
-  test_avlt();
-  test_btree();
+  // test_bst();
+  // std::cout << std::endl;
+  // test_avlt();
+  // std::cout << std::endl;
+  // test_btree();
+  // std::cout << std::endl;
+  test_bptree();
   return 0;
 }

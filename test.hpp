@@ -24,6 +24,7 @@
 
 #include "avl_tree.hpp"
 #include "binary_search_tree.hpp"
+#include "bplustree.hpp"
 #include "btree.hpp"
 
 void test_bst() {
@@ -70,4 +71,18 @@ void test_btree() {
   btree.remove(2);
   btree.remove(16);
   btree.display();
+}
+
+void test_bptree() {
+  BPTree<int, int> bptree(3);
+  int num[23] = {1,  3,  7,  10, 11, 13, 14, 15, 18, 16, 19, 24,
+                 25, 26, 21, 4,  5,  20, 22, 2,  17, 12, 6};
+  for (int i = 0; i < 23; ++i) {
+    bptree.insert(num[i], i);
+  }
+  bptree.remove(14);
+  bptree.remove(1);
+  bptree.remove(7);
+  bptree.display();
+  bptree.displaybylink();
 }
