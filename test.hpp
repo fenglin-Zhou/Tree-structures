@@ -80,9 +80,9 @@ void test_bptree() {
   for (int i = 0; i < 23; ++i) {
     bptree.insert(num[i], i);
   }
-  bptree.remove(14);
-  bptree.remove(1);
-  bptree.remove(7);
+  bptree.remove(16);
+  bptree.remove(18);
+  bptree.remove(17);
   bptree.display();
   bptree.displaybylink();
 }

@@ -50,7 +50,7 @@ class BPTNode {
   // remove the key which is a non-leaf node
   void removefromnonleaf(int idx);
   // get the predecessor of the key
-  BPTNode<k, v>* getpred(int idx);
+  k getpred(int idx);
   // get the successor of the key
   BPTNode<k, v>* getsucc(int idx);
   // fill up th child node
@@ -125,13 +125,15 @@ void BPTNode<k, v>::removefromleaf(int idx) {
 }
 
 template <typename k, typename v>
-BPTNode<k, v>* BPTNode<k, v>::getpred(int idx) {
+k BPTNode<k, v>::getpred(int idx) {
   BPTNode<k, v>* cur = child_[idx];
   while (!cur->isleaf_) {
     cur = cur->child_[cur->keycount_];
   }
-  cur->keycount_--;
-  return cur;
+  BPTNode<k, v>* next = cur->next_;
+  next->keys_[0] = cur->keys_[cur->keycount_ - 1];
+  next->values_[0] = cur->keys_[cur->keycount_ - 1];
+  return cur->keys_[cur->keycount_ - 1];
 }
 
 template <typename k, typename v>
@@ -149,11 +151,13 @@ void BPTNode<k, v>::removefromnonleaf(int idx) {
   // if the child[idx] has atleast degree keys, find the maximum key int child
   // and replace key by pred, then delete pred;
   if (child_[idx]->keycount_ >= degree_) {
-    BPTNode<k, v>* pred = getpred(idx);
-    keys_[idx] = pred->keys_[pred->keycount_];
-    child_[idx + 1]->insertnonfull(pred->keys_[pred->keycount_],
-                                   pred->values_[pred->keycount_]);
-    child_[idx + 1]->remove(key);
+    // BPTNode<k, v>* pred = getpred(idx);
+    k pred = getpred(idx);
+    keys_[idx] = pred;
+    // keys_[idx] = pred->keys_[pred->keycount_ - 1];
+    // child_[idx + 1]->insertnonfull(pred->keys_[pred->keycount_ - 1],
+    //                                pred->values_[pred->keycount_ - 1]);
+    child_[idx]->remove(pred);
   }
   // if the child[idx+1] has atleast degree keys, find the minimum key int child
   // and replace key by succ, then delete succ;
