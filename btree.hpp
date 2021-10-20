@@ -60,10 +60,12 @@ class BTNode {
   // merge idx-th child with idx+1 child
   void merge(int idx);
 
+  void splitchild(int index, BTNode<T>* node);
+
  public:
   BTNode(int degree, bool leaf);
+  ~BTNode() {}
   void insertnonfull(T key);
-  void splitchild(int index, BTNode<T>* node);
   void display();
   BTNode<T>* search(T key);
   void remove(T key);
@@ -78,6 +80,7 @@ class BTree {
 
  public:
   BTree(int degree) : root_(nullptr), degree_(degree) {}
+  ~BTree() {}
   void display();
   BTNode<T>* search(T key) {
     return (root_ != nullptr) ? root_->search(key) : nullptr;

@@ -29,13 +29,11 @@
 
 void test_bst() {
   BSTree<int, int> bst;
-  bst.insertElem(2, 2);
-  bst.insertElem(4, 4);
-  bst.insertElem(7, 7);
-  bst.insertElem(9, 9);
-  bst.insertElem(5, 5);
-  bst.insertElem(3, 3);
-  bst.insertElem(1, 1);
+  int num[23] = {1,  3,  7,  10, 11, 13, 14, 15, 18, 16, 19, 24,
+                 25, 26, 21, 4,  5,  20, 22, 2,  17, 12, 6};
+  for (int i = 0; i < 23; ++i) {
+    bst.insertElem(num[i], i);
+  }
   std::shared_ptr<Node<int, int> > node = bst.searchElem(1);
   bst.deleteElem(1);
   bst.display();
@@ -43,13 +41,11 @@ void test_bst() {
 
 void test_avlt() {
   AVLTree<int, int> avlt;
-  avlt.insertElem(2, 2);
-  avlt.insertElem(4, 4);
-  avlt.insertElem(7, 7);
-  avlt.insertElem(9, 9);
-  avlt.insertElem(5, 5);
-  avlt.insertElem(3, 3);
-  avlt.insertElem(1, 1);
+  int num[23] = {1,  3,  7,  10, 11, 13, 14, 15, 18, 16, 19, 24,
+                 25, 26, 21, 4,  5,  20, 22, 2,  17, 12, 6};
+  for (int i = 0; i < 23; ++i) {
+    avlt.insertElem(num[i], i);
+  }
   std::shared_ptr<Node<int, int> > node = avlt.searchElem(1);
   avlt.deleteElem(1);
   avlt.display();

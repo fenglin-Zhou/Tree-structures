@@ -64,6 +64,7 @@ class BPTNode {
 
  public:
   BPTNode(int degree, bool leaf);
+  ~BPTNode() {}
   void insertnonfull(k key, v value);
   void splitchild(int index, BPTNode<k, v>* node);
   void display();
@@ -81,6 +82,7 @@ class BPTree {
 
  public:
   BPTree(int degree) : root_(nullptr), header_(nullptr), degree_(degree) {}
+  ~BPTree() {}
   void display();
   void displaybylink();
   BPTNode<k, v>* search(k key) {
