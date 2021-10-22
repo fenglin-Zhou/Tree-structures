@@ -43,9 +43,9 @@ class AVLTree {
   AVLTree();
   AVLTree(K, V);
   ~AVLTree() {}
-  void insertElem(K, V);
-  void deleteElem(K);
-  std::shared_ptr<Node<K, V> > searchElem(K);
+  void insert(K, V);
+  void remove(K);
+  std::shared_ptr<Node<K, V> > search(K);
   void display();
 };
 
@@ -94,7 +94,7 @@ void AVLTree<K, V>::balance(std::shared_ptr<Node<K, V> >& node) {
 }
 
 template <typename K, typename V>
-void AVLTree<K, V>::insertElem(K key, V value) {
+void AVLTree<K, V>::insert(K key, V value) {
   if (root_ == nullptr) {
     root_ = std::make_shared<Node<K, V> >(key, value);
     return;
@@ -121,7 +121,7 @@ void AVLTree<K, V>::insert(std::shared_ptr<Node<K, V> >& node, K key, V value) {
 }
 
 template <typename K, typename V>
-void AVLTree<K, V>::deleteElem(K key) {
+void AVLTree<K, V>::remove(K key) {
   deleteKey(root_, key);
 }
 
@@ -174,7 +174,7 @@ void AVLTree<K, V>::deleteKey(std::shared_ptr<Node<K, V> >& node, K key) {
 }
 
 template <typename K, typename V>
-std::shared_ptr<Node<K, V> > AVLTree<K, V>::searchElem(K key) {
+std::shared_ptr<Node<K, V> > AVLTree<K, V>::search(K key) {
   if (root_ == nullptr) {
     std::cout << "Not found!\n";
     return nullptr;

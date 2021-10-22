@@ -8,7 +8,8 @@
 
 ## how to build
 ```
-cmake .
+cd build_/
+cmake ..
 make
 ./tree
 ```

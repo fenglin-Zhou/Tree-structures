@@ -41,9 +41,9 @@ class BSTree {
   BSTree();
   BSTree(K, V);
   ~BSTree() {}
-  void insertElem(K, V);
-  void deleteElem(K);
-  std::shared_ptr<Node<K, V> > searchElem(K);
+  void insert(K, V);
+  void remove(K);
+  std::shared_ptr<Node<K, V> > search(K);
   void display();
 };
 
@@ -58,7 +58,7 @@ BSTree<K, V>::BSTree(K key, V value) {
 }
 
 template <typename K, typename V>
-void BSTree<K, V>::insertElem(K key, V value) {
+void BSTree<K, V>::insert(K key, V value) {
   if (root_ == nullptr) {
     root_ = std::make_shared<Node<K, V> >(key, value);
     return;
@@ -84,7 +84,7 @@ void BSTree<K, V>::insert(std::shared_ptr<Node<K, V> > &node, K key, V value) {
 }
 
 template <typename K, typename V>
-void BSTree<K, V>::deleteElem(K key) {
+void BSTree<K, V>::remove(K key) {
   deleteKey(root_, key);
 }
 
@@ -136,7 +136,7 @@ std::shared_ptr<Node<K, V> > BSTree<K, V>::findMin(
 }
 
 template <typename K, typename V>
-std::shared_ptr<Node<K, V> > BSTree<K, V>::searchElem(K key) {
+std::shared_ptr<Node<K, V> > BSTree<K, V>::search(K key) {
   if (root_ == nullptr) {
     std::cout << "Not found!\n";
     return nullptr;

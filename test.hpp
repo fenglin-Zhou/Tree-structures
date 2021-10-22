@@ -26,16 +26,17 @@
 #include "binary_search_tree.hpp"
 #include "bplustree.hpp"
 #include "btree.hpp"
+#include "redblacktree.hpp"
 
 void test_bst() {
   BSTree<int, int> bst;
   int num[23] = {1,  3,  7,  10, 11, 13, 14, 15, 18, 16, 19, 24,
                  25, 26, 21, 4,  5,  20, 22, 2,  17, 12, 6};
   for (int i = 0; i < 23; ++i) {
-    bst.insertElem(num[i], i);
+    bst.insert(num[i], i);
   }
-  std::shared_ptr<Node<int, int> > node = bst.searchElem(1);
-  bst.deleteElem(1);
+  std::shared_ptr<Node<int, int> > node = bst.search(1);
+  bst.remove(1);
   bst.display();
 }
 
@@ -44,10 +45,10 @@ void test_avlt() {
   int num[23] = {1,  3,  7,  10, 11, 13, 14, 15, 18, 16, 19, 24,
                  25, 26, 21, 4,  5,  20, 22, 2,  17, 12, 6};
   for (int i = 0; i < 23; ++i) {
-    avlt.insertElem(num[i], i);
+    avlt.insert(num[i], i);
   }
-  std::shared_ptr<Node<int, int> > node = avlt.searchElem(1);
-  avlt.deleteElem(1);
+  std::shared_ptr<Node<int, int> > node = avlt.search(1);
+  avlt.remove(1);
   avlt.display();
 }
 
@@ -81,4 +82,17 @@ void test_bptree() {
   bptree.remove(17);
   bptree.display();
   bptree.displaybylink();
+}
+
+void test_rbtree() {
+  RBTree<int, int> rbtree;
+  int num[23] = {1,  3,  7,  10, 11, 13, 14, 15, 18, 16, 19, 24,
+                 25, 26, 21, 4,  5,  20, 22, 2,  17, 12, 6};
+  for (int i = 0; i < 23; ++i) {
+    rbtree.insert(num[i], i);
+  }
+  // rbtree.remove(16);
+  // rbtree.remove(18);
+  // rbtree.remove(17);
+  rbtree.display();
 }

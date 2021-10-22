@@ -24,6 +24,7 @@
 #define _REDBLACKTREE_H_
 
 #include <iostream>
+#include <queue>
 
 template <typename K, typename V>
 class RBTree;
@@ -42,14 +43,16 @@ class RBTNode {
 
   RBTNode<K, V>* findmin();
   RBTNode<K, V>* findmax();
-  void insert(RBTNode<K, V>*);
+  RBTNode<K, V>* insert(K, V);
 
  public:
-  explicit RBTNode(K, V, RBTcolor, RBTNode<K, V>* parent, RBTNode<K, V>* left,
-                   RBTNode<K, V>* right);
-  ~RBTNode();
+  RBTNode() {}
+  RBTNode(K key, V value, RBTcolor color, RBTNode<K, V>* parent,
+          RBTNode<K, V>* left, RBTNode<K, V>* right);
+  ~RBTNode() {}
   void remove(K);
   RBTNode<K, V>* search(K);
+  void display();
 
   friend class RBTree<K, V>;
 };
@@ -60,6 +63,7 @@ class RBTree {
   RBTNode<K, V>* root_;
   void leftrotate(RBTNode<K, V>*& node);
   void rightrotate(RBTNode<K, V>*& node);
+  void insertfix(RBTNode<K, V>*);
 
  public:
   RBTree();
@@ -73,8 +77,7 @@ class RBTree {
 
 template <typename K, typename V>
 RBTNode<K, V>::RBTNode(K key, V value, RBTcolor color, RBTNode<K, V>* parent,
-                       RBTNode<K, V>* left = nullptr,
-                       RBTNode<K, V>* right = nullptr)
+                       RBTNode<K, V>* left, RBTNode<K, V>* right)
     : key_(key),
       value_(value),
       color_(color),
@@ -113,9 +116,20 @@ RBTNode<K, V>* RBTNode<K, V>::findmax() {
 }
 
 template <typename K, typename V>
-void RBTNode<K, V>::insert(RBTNode<K, V>* node) {
+void RBTNode<K, V>::display() {
+  std::cout << "key:" << key_ << ", value:" << value_ << ", color:";
+  if (color_ == RED)
+    std::cout << "red \n";
+  else
+    std::cout << "black \n";
+}
+
+template <typename K, typename V>
+RBTNode<K, V>* RBTNode<K, V>::insert(K key, V value) {
   RBTNode<K, V>* temp = this;
   RBTNode<K, V>* parent = temp;
+  RBTNode<K, V>* newnode =
+      new RBTNode<K, V>(key, value, RED, nullptr, nullptr, nullptr);
   while (temp != nullptr) {
     parent = temp;
     if (temp->key_ < key) {
@@ -123,12 +137,19 @@ void RBTNode<K, V>::insert(RBTNode<K, V>* node) {
     } else if (key < temp->key_) {
       temp = temp->left_;
     } else {
-      std::cout << "Insert an existing key! try again!\n";
-      return;
+      delete newnode;
+      std::cout << "Insert an existing key! Don't do this!\n";
+      return nullptr;
     }
   }
-  node->parent_ = parent;
-  temp = node;
+  if (parent != nullptr) {
+    if (parent->key_ < key)
+      parent->right_ = newnode;
+    else
+      parent->left_ = newnode;
+  }
+  newnode->parent_ = parent;
+  return newnode;
 }
 
 template <typename K, typename V>
@@ -139,25 +160,41 @@ void RBTree<K, V>::leftrotate(RBTNode<K, V>*& node) {
     temp->left_->parent_ = node;
   }
   temp->parent_ = node->parent_;
+  if (node->parent_ != nullptr) {
+    if (node == node->parent_->right_)
+      node->parent_->right_ = temp;
+    else
+      node->parent_->left_ = temp;
+  } else {
+    root_ = temp;
+  }
   temp->left_ = node;
-  node = temp;
+  node->parent_ = temp;
 }
 
 template <typename K, typename V>
 void RBTree<K, V>::rightrotate(RBTNode<K, V>*& node) {
   RBTNode<K, V>* temp = node->left_;
-  node->left_ = temp;
+  node->left_ = temp->right_;
   if (temp->right_ != nullptr) {
     temp->right_->parent_ = node;
   }
   temp->parent_ = node->parent_;
+  if (node->parent_ != nullptr) {
+    if (node == node->parent_->right_)
+      node->parent_->right_ = temp;
+    else
+      node->parent_->left_ = temp;
+  } else {
+    root_ = temp;
+  }
   temp->right_ = node;
-  node = temp;
+  node->parent_ = temp;
 }
 
 template <typename K, typename V>
 RBTree<K, V>::RBTree(K key, V value) {
-  root_ = new RBTNode<k, V>(key, value, BLACK, nullptr);
+  root_ = new RBTNode<K, V>(key, value, BLACK, nullptr);
 }
 
 template <typename K, typename V>
@@ -167,20 +204,66 @@ template <typename K, typename V>
 RBTree<K, V>::~RBTree() {}
 
 template <typename K, typename V>
-void RBTree<K, V>::remove(K) {
+void RBTree<K, V>::remove(K key) {
   if (root_ != nullptr) {
-    root_->remove(K);
+    root_->remove(key);
   }
+}
+
+template <typename K, typename V>
+void RBTree<K, V>::insertfix(RBTNode<K, V>* node) {
+  RBTNode<K, V>* parent;
+  parent = node->parent_;
+  while (node != root_ && parent->color_ == RED) {
+    RBTNode<K, V>* gparent = parent->parent_;
+    if (gparent->left_ == parent) {
+      RBTNode<K, V>* uncle = gparent->right_;
+      if (uncle != nullptr && uncle->color_ == RED) {
+        parent->color_ = BLACK;
+        uncle->color_ = BLACK;
+        gparent->color_ = RED;
+        node = gparent;
+        parent = node->parent_;
+      } else {
+        if (node == parent->right_) {
+          leftrotate(parent);
+          std::swap(node, parent);
+        }
+        parent->color_ = BLACK;
+        gparent->color_ = RED;
+        rightrotate(gparent);
+        break;
+      }
+    } else {
+      RBTNode<K, V>* uncle = gparent->left_;
+      if (uncle != nullptr && uncle->color_ == RED) {
+        parent->color_ = BLACK;
+        gparent->color_ = RED;
+        node = gparent;
+        parent = node->parent_;
+      } else {
+        if (node == parent->left_) {
+          rightrotate(parent);
+          std::swap(node, parent);
+        }
+        parent->color_ = BLACK;
+        gparent->color_ = RED;
+        leftrotate(gparent);
+        break;
+      }
+    }
+  }
+  root_->color_ = BLACK;
 }
 
 template <typename K, typename V>
 void RBTree<K, V>::insert(K key, V value) {
   if (root_ == nullptr) {
-    root_ = new RBTNode<K, V>(key, value, BLACK, nullptr);
+    root_ = new RBTNode<K, V>(key, value, BLACK, nullptr, nullptr, nullptr);
   } else {
-    RBTNode<K, V>* node = new RBTNode<K, V>(key, value, RED, nullptr);
-    root_->insert(node);
-    if (node->parent_->color_ == RED) {
+    RBTNode<K, V>* temp = root_->insert(key, value);
+    if (temp != nullptr) {
+      insertfix(temp);
     }
   }
 }
@@ -194,6 +277,31 @@ RBTNode<K, V>* RBTree<K, V>::search(K key) {
 }
 
 template <typename K, typename V>
-void RBTree<K, V>::display() {}
+void RBTree<K, V>::display() {
+  if (root_ != nullptr) {
+    std::cout << "---------Red Black Tree------\n";
+    std::queue<RBTNode<K, V>*> q;
+    q.push(root_);
+    int level = 1;
+    int len = 0;
+    RBTNode<K, V>* temp = nullptr;
+    while (!q.empty()) {
+      len = q.size();
+      std::cout << "---------level" << level++ << "-------\n";
+      for (int i = 0; i < len; ++i) {
+        temp = q.front();
+        q.pop();
+        temp->display();
+        if (temp->left_ != nullptr) {
+          q.push(temp->left_);
+        }
+        if (temp->right_ != nullptr) {
+          q.push(temp->right_);
+        }
+      }
+      std::cout << std::endl;
+    }
+  }
+}
 
 #endif
