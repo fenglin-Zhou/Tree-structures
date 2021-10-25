@@ -64,6 +64,11 @@ class RBTree {
   void leftrotate(RBTNode<K, V>*& node);
   void rightrotate(RBTNode<K, V>*& node);
   void insertfix(RBTNode<K, V>*);
+  void remove(RBTNode<K, V>*);
+  RBTNode<K, V>* findmin(RBTNode<K, V>*);
+  void removenoleaf(RBTNode<K, V>*);
+  void removetwoleaf(RBTNode<K, V>*);
+  void removefixup(RBTNode<K, V>* child, RBTNode<K, V>* parent);
 
  public:
   RBTree();
@@ -170,6 +175,7 @@ void RBTree<K, V>::leftrotate(RBTNode<K, V>*& node) {
   }
   temp->left_ = node;
   node->parent_ = temp;
+  node = temp;
 }
 
 template <typename K, typename V>
@@ -190,6 +196,7 @@ void RBTree<K, V>::rightrotate(RBTNode<K, V>*& node) {
   }
   temp->right_ = node;
   node->parent_ = temp;
+  node = temp;
 }
 
 template <typename K, typename V>
@@ -206,8 +213,175 @@ RBTree<K, V>::~RBTree() {}
 template <typename K, typename V>
 void RBTree<K, V>::remove(K key) {
   if (root_ != nullptr) {
-    root_->remove(key);
+    RBTNode<K, V>* removenode = search(key);
+    if (removenode != nullptr) {
+      remove(removenode);
+    }
   }
+}
+
+template <typename K, typename V>
+void RBTree<K, V>::removefixup(RBTNode<K, V>* child, RBTNode<K, V>* parent) {
+  RBTNode<K, V>* bro = nullptr;
+  while ((!child) || child->color_ == BLACK && child != root_) {
+    if (child == parent->left_) {
+      bro = parent->right_;
+      if (bro->color_ == RED) {
+        bro->color_ = BLACK;
+        parent->color_ = RED;
+        leftrotate(parent);
+        bro = parent->right_;
+      }
+      if ((bro->right_ == nullptr || bro->right_->color_ == BLACK) &&
+          (bro->left_ == nullptr || bro->left_->color_ == BLACK)) {
+        bro->color_ = RED;
+        child = parent;
+        parent = child->parent_;
+      } else {
+        if ((bro->right_ == nullptr || bro->right_->color_ == BLACK) &&
+            (bro->left_ == nullptr || bro->left_->color_ == RED)) {
+          bro->color_ = RED;
+          bro->left_->color_ = BLACK;
+          rightrotate(bro);
+          bro = parent->right_;
+        }
+        bro->color_ = parent->color_;
+        parent->color_ = BLACK;
+        bro->right_->color_ = BLACK;
+        leftrotate(parent);
+        child = root_;
+        break;
+      }
+    } else {
+      bro = parent->left_;
+      if (bro->color_ == RED) {
+        bro->color_ = BLACK;
+        parent->color_ = RED;
+        rightrotate(parent);
+      }
+      if ((bro->right_ == nullptr || bro->right_->color_ == BLACK) &&
+          (bro->left_ == nullptr || bro->left_->color_ == BLACK)) {
+        bro->color_ = RED;
+        child = parent;
+        parent = child->parent_;
+      } else {
+        if ((bro->left_ == nullptr || bro->left_->color_ == BLACK) &&
+            (bro->right_ == nullptr || bro->right_->color_ == RED)) {
+          bro->color_ = RED;
+          bro->right_->color_ = BLACK;
+          leftrotate(bro);
+          bro = parent->left_;
+        }
+        bro->color_ = parent->color_;
+        parent->color_ = BLACK;
+        bro->left_->color_ = BLACK;
+        rightrotate(parent);
+        child = root_;
+        break;
+      }
+    }
+  }
+  if (child != nullptr) {
+    child->color_ = BLACK;
+  }
+}
+
+template <typename K, typename V>
+void RBTree<K, V>::remove(RBTNode<K, V>* node) {
+  RBTNode<K, V>* child = nullptr;
+  RBTNode<K, V>* parent = node->parent_;
+  RBTcolor color;
+  if (node->left_ == nullptr && node->right_ == nullptr) {
+    removenoleaf(node);
+    return;
+  } else if (node->left_ != nullptr && node->right_ != nullptr) {
+    removetwoleaf(node);
+    return;
+  } else if (node->left_ != nullptr) {
+    child = node->left_;
+  } else {
+    child = node->right_;
+  }
+  parent = node->parent_;
+  color = node->color_;
+  if (child != nullptr) {
+    child->parent_ = parent;
+  }
+  if (parent != nullptr) {
+    if (parent->right_ == node)
+      parent->right_ = child;
+    else
+      parent->left_ = child;
+  } else {
+    root_ = child;
+  }
+  if (color == BLACK) {
+    removefixup(child, parent);
+  }
+  delete node;
+  node = nullptr;
+}
+
+template <typename K, typename V>
+void RBTree<K, V>::removetwoleaf(RBTNode<K, V>* node) {
+  RBTNode<K, V>* replace = findmin(node);
+  RBTNode<K, V>* child = nullptr;
+  RBTNode<K, V>* parent = nullptr;
+  RBTcolor color;
+  if (node->parent_ != nullptr) {
+    if (node->parent_->left_ == node)
+      node->parent_->left_ = replace;
+    else
+      node->parent_->right_ = replace;
+  } else {
+    root_ = replace;
+  }
+  child = replace->right_;
+  parent = replace->parent_;
+  color = replace->color_;
+  if (parent == node) {
+    parent = replace;
+  } else {
+    if (child != nullptr) {
+      child->parent_ = parent;
+    }
+    parent->left_ = child;
+    replace->right_ = node->right_;
+    node->right_->parent_ = replace;
+  }
+  replace->parent_ = node->parent_;
+  replace->color_ = node->color_;
+  replace->left_ = node->left_;
+  node->left_->parent_ = replace;
+  if (color == BLACK) {
+    removefixup(child, parent);
+  }
+  delete node;
+  node = nullptr;
+}
+
+template <typename K, typename V>
+void RBTree<K, V>::removenoleaf(RBTNode<K, V>* node) {
+  RBTNode<K, V>* parent = node->parent_;
+  if (parent != nullptr) {
+    if (parent->right_ == node)
+      parent->right_ = nullptr;
+    else
+      parent->left_ = nullptr;
+    delete node;
+  } else {
+    delete node;
+    root_ = node = nullptr;
+  }
+}
+
+template <typename K, typename V>
+RBTNode<K, V>* RBTree<K, V>::findmin(RBTNode<K, V>* node) {
+  RBTNode<K, V>* minnode = node->right_;
+  while (minnode->left_ != nullptr) {
+    minnode = minnode->left_;
+  }
+  return minnode;
 }
 
 template <typename K, typename V>

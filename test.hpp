@@ -91,8 +91,8 @@ void test_rbtree() {
   for (int i = 0; i < 23; ++i) {
     rbtree.insert(num[i], i);
   }
-  // rbtree.remove(16);
-  // rbtree.remove(18);
-  // rbtree.remove(17);
+  rbtree.remove(16);
+  rbtree.remove(18);
+  rbtree.remove(17);
   rbtree.display();
 }
