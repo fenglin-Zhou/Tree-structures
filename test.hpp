@@ -23,7 +23,7 @@
 #include <iostream>
 
 #include "avl_tree.hpp"
-#include "binary_Search_tree.hpp"
+#include "binary_search_tree.hpp"
 #include "bplustree.hpp"
 #include "btree.hpp"
 #include "redblacktree.hpp"
