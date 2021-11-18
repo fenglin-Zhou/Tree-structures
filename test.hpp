@@ -23,7 +23,7 @@
 #include <iostream>
 
 #include "avl_tree.hpp"
-#include "binary_search_tree.hpp"
+#include "binary_Search_tree.hpp"
 #include "bplustree.hpp"
 #include "btree.hpp"
 #include "redblacktree.hpp"
@@ -33,11 +33,11 @@ void test_bst() {
   int num[23] = {1,  3,  7,  10, 11, 13, 14, 15, 18, 16, 19, 24,
                  25, 26, 21, 4,  5,  20, 22, 2,  17, 12, 6};
   for (int i = 0; i < 23; ++i) {
-    bst.insert(num[i], i);
+    bst.Insert(num[i], i);
   }
-  std::shared_ptr<Node<int, int> > node = bst.search(1);
-  bst.remove(1);
-  bst.display();
+  std::shared_ptr<Node<int, int> > node = bst.Search(1);
+  bst.Remove(1);
+  bst.Display();
 }
 
 void test_avlt() {
@@ -45,11 +45,11 @@ void test_avlt() {
   int num[23] = {1,  3,  7,  10, 11, 13, 14, 15, 18, 16, 19, 24,
                  25, 26, 21, 4,  5,  20, 22, 2,  17, 12, 6};
   for (int i = 0; i < 23; ++i) {
-    avlt.insert(num[i], i);
+    avlt.Insert(num[i], i);
   }
-  std::shared_ptr<Node<int, int> > node = avlt.search(1);
-  avlt.remove(1);
-  avlt.display();
+  std::shared_ptr<Node<int, int> > node = avlt.Search(1);
+  avlt.Remove(1);
+  avlt.Display();
 }
 
 void test_btree() {
@@ -57,17 +57,17 @@ void test_btree() {
   int num[23] = {1,  3,  7,  10, 11, 13, 14, 15, 18, 16, 19, 24,
                  25, 26, 21, 4,  5,  20, 22, 2,  17, 12, 6};
   for (int i = 0; i < 23; ++i) {
-    btree.insert(num[i]);
+    btree.Insert(num[i]);
   }
-  BTNode<int>* node = btree.search(6);
-  btree.display();
-  btree.remove(6);
-  btree.remove(13);
-  btree.remove(7);
-  btree.remove(4);
-  btree.remove(2);
-  btree.remove(16);
-  btree.display();
+  BTNode<int>* node = btree.Search(6);
+  btree.Display();
+  btree.Remove(6);
+  btree.Remove(13);
+  btree.Remove(7);
+  btree.Remove(4);
+  btree.Remove(2);
+  btree.Remove(16);
+  btree.Display();
 }
 
 void test_bptree() {
@@ -75,13 +75,13 @@ void test_bptree() {
   int num[23] = {1,  3,  7,  10, 11, 13, 14, 15, 18, 16, 19, 24,
                  25, 26, 21, 4,  5,  20, 22, 2,  17, 12, 6};
   for (int i = 0; i < 23; ++i) {
-    bptree.insert(num[i], i);
+    bptree.Insert(num[i], i);
   }
-  bptree.remove(16);
-  bptree.remove(18);
-  bptree.remove(17);
-  bptree.display();
-  bptree.displaybylink();
+  bptree.Remove(16);
+  bptree.Remove(18);
+  bptree.Remove(17);
+  bptree.Display();
+  bptree.Displaybylink();
 }
 
 void test_rbtree() {
@@ -89,10 +89,10 @@ void test_rbtree() {
   int num[23] = {1,  3,  7,  10, 11, 13, 14, 15, 18, 16, 19, 24,
                  25, 26, 21, 4,  5,  20, 22, 2,  17, 12, 6};
   for (int i = 0; i < 23; ++i) {
-    rbtree.insert(num[i], i);
+    rbtree.Insert(num[i], i);
   }
-  rbtree.remove(16);
-  rbtree.remove(18);
-  rbtree.remove(17);
-  rbtree.display();
+  rbtree.Remove(16);
+  rbtree.Remove(18);
+  rbtree.Remove(17);
+  rbtree.Display();
 }

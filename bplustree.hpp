@@ -5,7 +5,7 @@
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// to use, copy, modify, Merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
 
@@ -44,32 +44,32 @@ class BPTNode {
   // Is true when node is leaf
   bool isleaf_;
   // find the index of the key which is greater than or equal to key
-  int findkey(k key);
-  // remove the key which is in a leaf node
-  void removefromleaf(int idx);
-  // remove the key which is a non-leaf node
-  void removefromnonleaf(int idx);
+  int Findkey(k key);
+  // Remove the key which is in a leaf node
+  void RemoveFromLeaf(int idx);
+  // Remove the key which is a non-leaf node
+  void RemoveFromNonLeaf(int idx);
   // get the predecessor of the key
-  k getpred(int idx);
+  k GetPred(int idx);
   // get the successor of the key
-  BPTNode<k, v>* getsucc(int idx);
-  // fill up th child node
-  void fill(int idx);
+  BPTNode<k, v>* GetSucc(int idx);
+  // Fill up th child node
+  void Fill(int idx);
   // borrow a key from the child_[idx-1]th node and place it in child_[idx]
-  void borrowfromprev(int idx);
+  void BorrowFromPrev(int idx);
   // borrow a key from the child_[idx+1]th node and place it in child_[idx]
-  void borrowfromnext(int idx);
-  // merge idx-th child with idx+1 child
-  void merge(int idx);
+  void BorrowFromNext(int idx);
+  // Merge idx-th child with idx+1 child
+  void Merge(int idx);
 
  public:
   BPTNode(int degree, bool leaf);
   ~BPTNode() {}
-  void insertnonfull(k key, v value);
-  void splitchild(int index, BPTNode<k, v>* node);
-  void display();
-  BPTNode<k, v>* search(k key);
-  void remove(k key);
+  void InsertNonFull(k key, v value);
+  void SplitChild(int index, BPTNode<k, v>* node);
+  void Display();
+  BPTNode<k, v>* Search(k key);
+  void Remove(k key);
 
   friend class BPTree<k, v>;
 };
@@ -83,13 +83,13 @@ class BPTree {
  public:
   BPTree(int degree) : root_(nullptr), header_(nullptr), degree_(degree) {}
   ~BPTree() {}
-  void display();
-  void displaybylink();
-  BPTNode<k, v>* search(k key) {
-    return (root_ != nullptr) ? root_->search(key) : nullptr;
+  void Display();
+  void Displaybylink();
+  BPTNode<k, v>* Search(k key) {
+    return (root_ != nullptr) ? root_->Search(key) : nullptr;
   }
-  void insert(k key, v value);
-  void remove(k key);
+  void Insert(k key, v value);
+  void Remove(k key);
 };
 
 template <typename k, typename v>
@@ -109,7 +109,7 @@ BPTNode<k, v>::BPTNode(int degree, bool leaf) {
 }
 
 template <typename k, typename v>
-int BPTNode<k, v>::findkey(k key) {
+int BPTNode<k, v>::Findkey(k key) {
   int index = 0;
   while (index < keycount_ && keys_[index] < key) {
     ++index;
@@ -118,7 +118,7 @@ int BPTNode<k, v>::findkey(k key) {
 }
 
 template <typename k, typename v>
-void BPTNode<k, v>::removefromleaf(int idx) {
+void BPTNode<k, v>::RemoveFromLeaf(int idx) {
   for (int i = idx + 1; i < keycount_; ++i) {
     keys_[i - 1] = keys_[i];
     values_[i - 1] = values_[i];
@@ -127,7 +127,7 @@ void BPTNode<k, v>::removefromleaf(int idx) {
 }
 
 template <typename k, typename v>
-k BPTNode<k, v>::getpred(int idx) {
+k BPTNode<k, v>::GetPred(int idx) {
   BPTNode<k, v>* cur = child_[idx];
   while (!cur->isleaf_) {
     cur = cur->child_[cur->keycount_];
@@ -139,7 +139,7 @@ k BPTNode<k, v>::getpred(int idx) {
 }
 
 template <typename k, typename v>
-BPTNode<k, v>* BPTNode<k, v>::getsucc(int idx) {
+BPTNode<k, v>* BPTNode<k, v>::GetSucc(int idx) {
   BPTNode<k, v>* cur = child_[idx + 1];
   while (!cur->isleaf_) {
     cur = cur->child_[0];
@@ -148,52 +148,52 @@ BPTNode<k, v>* BPTNode<k, v>::getsucc(int idx) {
 }
 
 template <typename k, typename v>
-void BPTNode<k, v>::removefromnonleaf(int idx) {
+void BPTNode<k, v>::RemoveFromNonLeaf(int idx) {
   k key = keys_[idx];
   // if the child[idx] has atleast degree keys, find the maximum key int child
   // and replace key by pred, then delete pred;
   if (child_[idx]->keycount_ >= degree_) {
-    // BPTNode<k, v>* pred = getpred(idx);
-    k pred = getpred(idx);
+    // BPTNode<k, v>* pred = GetPred(idx);
+    k pred = GetPred(idx);
     keys_[idx] = pred;
     // keys_[idx] = pred->keys_[pred->keycount_ - 1];
-    // child_[idx + 1]->insertnonfull(pred->keys_[pred->keycount_ - 1],
+    // child_[idx + 1]->InsertNonFull(pred->keys_[pred->keycount_ - 1],
     //                                pred->values_[pred->keycount_ - 1]);
-    child_[idx]->remove(pred);
+    child_[idx]->Remove(pred);
   }
   // if the child[idx+1] has atleast degree keys, find the minimum key int child
   // and replace key by succ, then delete succ;
   else if (child_[idx + 1]->keycount_ >= degree_) {
-    BPTNode<k, v>* succ = getsucc(idx);
+    BPTNode<k, v>* succ = GetSucc(idx);
     keys_[idx] = succ->keys_[1];
-    child_[idx + 1]->remove(succ->keys_[0]);
+    child_[idx + 1]->Remove(succ->keys_[0]);
   }
-  // if both child[idx] ans child[idx+1] has less that degree keys,merge them
-  // remove the key which is in child[idx] now
+  // if both child[idx] ans child[idx+1] has less that degree keys,Merge them
+  // Remove the key which is in child[idx] now
   else {
-    merge(idx);
-    child_[idx]->remove(key);
+    Merge(idx);
+    child_[idx]->Remove(key);
   }
 }
 
 template <typename k, typename v>
-void BPTNode<k, v>::fill(int idx) {
+void BPTNode<k, v>::Fill(int idx) {
   // borrow a key from prev or next
   if (idx != 0 && child_[idx - 1]->keycount_ >= degree_) {
-    borrowfromprev(idx);
+    BorrowFromPrev(idx);
   } else if (idx != keycount_ && child_[idx + 1]->keycount_ >= degree_) {
-    borrowfromnext(idx);
+    BorrowFromNext(idx);
   } else {
     if (idx != keycount_) {
-      merge(idx);
+      Merge(idx);
     } else {
-      merge(idx - 1);
+      Merge(idx - 1);
     }
   }
 }
 
 template <typename k, typename v>
-void BPTNode<k, v>::borrowfromprev(int idx) {
+void BPTNode<k, v>::BorrowFromPrev(int idx) {
   BPTNode<k, v>* child = child_[idx];
   BPTNode<k, v>* sibling = child_[idx - 1];
   // Move all keys in C[idx] one step backward
@@ -222,7 +222,7 @@ void BPTNode<k, v>::borrowfromprev(int idx) {
 }
 
 template <typename k, typename v>
-void BPTNode<k, v>::borrowfromnext(int idx) {
+void BPTNode<k, v>::BorrowFromNext(int idx) {
   BPTNode<k, v>* child = child_[idx];
   BPTNode<k, v>* sibling = child_[idx + 1];
   child->keys_[child->keycount_] = keys_[idx];
@@ -248,17 +248,17 @@ void BPTNode<k, v>::borrowfromnext(int idx) {
 }
 
 template <typename k, typename v>
-void BPTNode<k, v>::remove(k key) {
+void BPTNode<k, v>::Remove(k key) {
   // find the index of the key which is greater than or equal to key
-  int index = findkey(key);
+  int index = Findkey(key);
   // the key in this node
   if (index < keycount_ && keys_[index] == key) {
     if (isleaf_) {
       // the node is a leaf
-      removefromleaf(index);
+      RemoveFromLeaf(index);
     } else {
       // the node is not a leaf
-      removefromnonleaf(index);
+      RemoveFromNonLeaf(index);
     }
   } else {
     if (isleaf_) {
@@ -269,23 +269,23 @@ void BPTNode<k, v>::remove(k key) {
     // with the last child of this node
     bool flag = ((index == keycount_) ? true : false);
     // child[index] where the key is supposed to exist  has less that degree
-    // keys, fill that child
+    // keys, Fill that child
     if (child_[index]->keycount_ < degree_) {
-      fill(index);
+      Fill(index);
     }
     // When has less degree keys in before and after child, the
-    // merge will cause the current node keycount to decrease, then the key to
-    // be removed appears in the child_[indx-1]
+    // Merge will cause the current node keycount to decrease, then the key to
+    // be Removed appears in the child_[indx-1]
     if (flag && index > keycount_) {
-      child_[index - 1]->remove(key);
+      child_[index - 1]->Remove(key);
     } else {
-      child_[index]->remove(key);
+      child_[index]->Remove(key);
     }
   }
 }
 
 template <typename k, typename v>
-void BPTNode<k, v>::merge(int idx) {
+void BPTNode<k, v>::Merge(int idx) {
   BPTNode<k, v>* child = child_[idx];
   BPTNode<k, v>* sibling = child_[idx + 1];
   if (!child->isleaf_) {
@@ -321,7 +321,7 @@ void BPTNode<k, v>::merge(int idx) {
 }
 
 template <typename k, typename v>
-void BPTNode<k, v>::display() {
+void BPTNode<k, v>::Display() {
   for (int i = 0; i < keycount_; ++i) {
     std::cout << "key:" << keys_[i] << " ";
     if (isleaf_) {
@@ -331,17 +331,17 @@ void BPTNode<k, v>::display() {
   std::cout << "\n";
 }
 template <typename k, typename v>
-void BPTNode<k, v>::insertnonfull(k key, v value) {
+void BPTNode<k, v>::InsertNonFull(k key, v value) {
   int i = keycount_ - 1;
   if (isleaf_ == true) {
-    // find the location of new key to be inserted
+    // find the location of new key to be Inserted
     // Move all the larger keys to one position behind
     while (i >= 0 && keys_[i] > key) {
       keys_[i + 1] = keys_[i];
       values_[i + 1] = values_[i];
       --i;
     }
-    // insert the new key at found lacation
+    // Insert the new key at found lacation
     keys_[i + 1] = key;
     values_[i + 1] = value;
     keycount_++;
@@ -350,17 +350,17 @@ void BPTNode<k, v>::insertnonfull(k key, v value) {
       --i;
     }
     if (child_[i + 1]->keycount_ == 2 * degree_ - 1) {
-      splitchild(i + 1, child_[i + 1]);
+      SplitChild(i + 1, child_[i + 1]);
       if (keys_[i + 1] < key) {
         i++;
       }
     }
-    child_[i + 1]->insertnonfull(key, value);
+    child_[i + 1]->InsertNonFull(key, value);
   }
 }
 
 template <typename k, typename v>
-void BPTNode<k, v>::splitchild(int index, BPTNode<k, v>* node) {
+void BPTNode<k, v>::SplitChild(int index, BPTNode<k, v>* node) {
   // create a new node which is going to store last (degree-1) keys of node
   // node->kyes_ 0, degree-1, degree, 2degree-1
   //             | - - - - - |  -  | - - - - - |
@@ -406,7 +406,7 @@ void BPTNode<k, v>::splitchild(int index, BPTNode<k, v>* node) {
 }
 
 template <typename k, typename v>
-BPTNode<k, v>* BPTNode<k, v>::search(k key) {
+BPTNode<k, v>* BPTNode<k, v>::Search(k key) {
   int i = 0;
   while (i < keycount_ && key > keys_[i]) {
     ++i;
@@ -419,11 +419,11 @@ BPTNode<k, v>* BPTNode<k, v>::search(k key) {
     std::cout << "not find " << key << std::endl;
     return nullptr;
   }
-  return child_[i]->search(key);
+  return child_[i]->Search(key);
 }
 
 template <typename k, typename v>
-void BPTree<k, v>::insert(k key, v value) {
+void BPTree<k, v>::Insert(k key, v value) {
   if (root_ == nullptr) {
     root_ = new BPTNode<k, v>(degree_, true);
     root_->keys_[0] = key;
@@ -434,26 +434,26 @@ void BPTree<k, v>::insert(k key, v value) {
     if (root_->keycount_ == 2 * degree_ - 1) {
       BPTNode<k, v>* temp = new BPTNode<k, v>(degree_, false);
       temp->child_[0] = root_;
-      temp->splitchild(0, root_);
+      temp->SplitChild(0, root_);
       int i = 0;
       if (temp->keys_[0] < key) {
         i++;
       }
-      temp->child_[i]->insertnonfull(key, value);
+      temp->child_[i]->InsertNonFull(key, value);
       root_ = temp;
     } else {
-      root_->insertnonfull(key, value);
+      root_->InsertNonFull(key, value);
     }
   }
 }
 
 template <typename k, typename v>
-void BPTree<k, v>::remove(k key) {
+void BPTree<k, v>::Remove(k key) {
   if (root_ == nullptr) {
     std::cout << "The tree is empty\n";
     return;
   }
-  root_->remove(key);
+  root_->Remove(key);
   if (root_->keycount_ == 0) {
     BPTNode<k, v>* temp = root_;
     if (root_->isleaf_) {
@@ -466,7 +466,7 @@ void BPTree<k, v>::remove(k key) {
 }
 
 template <typename k, typename v>
-void BPTree<k, v>::display() {
+void BPTree<k, v>::Display() {
   if (root_ != nullptr) {
     std::cout << "-------- Display BPTree ------\n";
     std::queue<BPTNode<k, v>*> q;
@@ -479,7 +479,7 @@ void BPTree<k, v>::display() {
         BPTNode<k, v>* temp = q.front();
         q.pop();
         std::cout << " " << i << ":";
-        temp->display();
+        temp->Display();
         if (!temp->isleaf_)
           for (int j = 0; j <= temp->keycount_; ++j) {
             q.push(temp->child_[j]);
@@ -493,12 +493,12 @@ void BPTree<k, v>::display() {
 }
 
 template <typename k, typename v>
-void BPTree<k, v>::displaybylink() {
+void BPTree<k, v>::Displaybylink() {
   if (header_ != nullptr) {
     BPTNode<k, v>* temp = header_;
     std::cout << "-------- Display BPTree ------\n";
     while (temp != nullptr) {
-      temp->display();
+      temp->Display();
       temp = temp->next_;
     }
   }

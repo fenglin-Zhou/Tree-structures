@@ -42,10 +42,10 @@ class Node {
   V getValue() const;
   void setValue(V);
   void setKey(K);
-  void display();
-  int height();
-  int leftHeight();
-  int rightHeight();
+  void Display();
+  int Height();
+  int LeftHeight();
+  int RightHeight();
 };
 
 template <typename K, typename V>
@@ -57,25 +57,25 @@ Node<K, V>::Node(const K key, const V value) {
 }
 
 template <typename K, typename V>
-int Node<K, V>::leftHeight() {
+int Node<K, V>::LeftHeight() {
   if (left_ == nullptr) {
     return 0;
   }
-  return left_->height();
+  return left_->Height();
 }
 
 template <typename K, typename V>
-int Node<K, V>::rightHeight() {
+int Node<K, V>::RightHeight() {
   if (right_ == nullptr) {
     return 0;
   }
-  return right_->height();
+  return right_->Height();
 }
 
 template <typename K, typename V>
-int Node<K, V>::height() {
-  return std::max(left_ == nullptr ? 0 : left_->height(),
-                  right_ == nullptr ? 0 : right_->height()) +
+int Node<K, V>::Height() {
+  return std::max(left_ == nullptr ? 0 : left_->Height(),
+                  right_ == nullptr ? 0 : right_->Height()) +
          1;
 }
 
@@ -100,7 +100,7 @@ void Node<K, V>::setKey(K key) {
 }
 
 template <typename K, typename V>
-void Node<K, V>::display() {
+void Node<K, V>::Display() {
   std::cout << "key:" << key_ << " value:" << value_ << std::endl;
 }
 
