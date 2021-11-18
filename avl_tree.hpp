@@ -80,13 +80,13 @@ void AVLTree<K, V>::Balance(std::shared_ptr<Node<K, V> >& node) {
   if (node == nullptr) {
     return;
   }
-  if (node->leftHeight() - node->rightHeight() > 1) {
-    if (node->left_->rightHeight() > node->left_->leftHeight()) {
+  if (node->LeftHeight() - node->RightHeight() > 1) {
+    if (node->left_->RightHeight() > node->left_->LeftHeight()) {
       LeftRotate(node->left_);
     }
     RightRotate(node);
-  } else if (node->rightHeight() - node->leftHeight() > 1) {
-    if (node->right_->leftHeight() > node->right_->rightHeight()) {
+  } else if (node->RightHeight() - node->LeftHeight() > 1) {
+    if (node->right_->LeftHeight() > node->right_->RightHeight()) {
       RightRotate(node->right_);
     }
     LeftRotate(node);
