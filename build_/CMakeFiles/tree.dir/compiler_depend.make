@@ -176,7 +176,7 @@ CMakeFiles/tree.dir/main.cc.o: ../main.cc \
   /usr/include/c++/9/bits/ostream.tcc \
   /usr/include/c++/9/istream \
   /usr/include/c++/9/bits/istream.tcc \
-  ../avl_tree.hpp \
+  ../avl_tree.h \
   /usr/include/c++/9/memory \
   /usr/include/c++/9/bits/stl_uninitialized.h \
   /usr/include/c++/9/utility \
@@ -200,7 +200,7 @@ CMakeFiles/tree.dir/main.cc.o: ../main.cc \
   /usr/include/c++/9/bit \
   /usr/include/c++/9/pstl/glue_memory_defs.h \
   /usr/include/c++/9/pstl/execution_defs.h \
-  ../node.hpp \
+  ../node.h \
   /usr/include/c++/9/queue \
   /usr/include/c++/9/deque \
   /usr/include/c++/9/bits/stl_deque.h \
@@ -210,22 +210,24 @@ CMakeFiles/tree.dir/main.cc.o: ../main.cc \
   /usr/include/c++/9/bits/stl_bvector.h \
   /usr/include/c++/9/bits/vector.tcc \
   /usr/include/c++/9/bits/stl_queue.h \
-  ../binary_search_tree.hpp \
-  ../test.hpp \
-  ../bplustree.hpp \
-  ../btree.hpp \
-  ../redblacktree.hpp
+  ../binary_search_tree.h \
+  ../test.h \
+  ../bplustree.h \
+  ../btree.h \
+  ../redblacktree.h
 
 
-../btree.hpp:
+../redblacktree.h:
 
-../binary_search_tree.hpp:
+../btree.h:
 
 /usr/include/c++/9/bits/stl_vector.h:
 
 /usr/include/c++/9/vector:
 
 /usr/include/c++/9/bits/deque.tcc:
+
+../binary_search_tree.h:
 
 /usr/include/c++/9/bits/stl_deque.h:
 
@@ -259,6 +261,8 @@ CMakeFiles/tree.dir/main.cc.o: ../main.cc \
 
 /usr/include/c++/9/memory:
 
+../avl_tree.h:
+
 /usr/include/c++/9/istream:
 
 /usr/include/c++/9/bits/streambuf_iterator.h:
@@ -283,7 +287,11 @@ CMakeFiles/tree.dir/main.cc.o: ../main.cc \
 
 /usr/include/linux/errno.h:
 
+../test.h:
+
 /usr/include/c++/9/cerrno:
+
+../bplustree.h:
 
 /usr/include/x86_64-linux-gnu/bits/_G_config.h:
 
@@ -324,8 +332,6 @@ CMakeFiles/tree.dir/main.cc.o: ../main.cc \
 /usr/include/c++/9/cstdio:
 
 /usr/include/c++/9/bits/cxxabi_init_exception.h:
-
-../node.hpp:
 
 /usr/include/c++/9/bits/exception_defines.h:
 
@@ -383,13 +389,13 @@ CMakeFiles/tree.dir/main.cc.o: ../main.cc \
 
 /usr/include/x86_64-linux-gnu/sys/cdefs.h:
 
-../test.hpp:
-
 /usr/include/x86_64-linux-gnu/c++/9/bits/gthr.h:
 
 /usr/include/x86_64-linux-gnu/asm/errno.h:
 
 /usr/include/x86_64-linux-gnu/bits/types/struct_timeval.h:
+
+../node.h:
 
 /usr/include/c++/9/bits/ptr_traits.h:
 
@@ -483,8 +489,6 @@ CMakeFiles/tree.dir/main.cc.o: ../main.cc \
 
 /usr/lib/gcc/x86_64-linux-gnu/9/include/stddef.h:
 
-../avl_tree.hpp:
-
 /usr/include/x86_64-linux-gnu/bits/wchar.h:
 
 /usr/include/c++/9/new:
@@ -512,8 +516,6 @@ CMakeFiles/tree.dir/main.cc.o: ../main.cc \
 /usr/include/x86_64-linux-gnu/bits/endian.h:
 
 /usr/include/stdint.h:
-
-../bplustree.hpp:
 
 /usr/include/x86_64-linux-gnu/bits/typesizes.h:
 
@@ -616,8 +618,6 @@ CMakeFiles/tree.dir/main.cc.o: ../main.cc \
 /usr/include/errno.h:
 
 /usr/include/c++/9/bits/cxxabi_forced.h:
-
-../redblacktree.hpp:
 
 /usr/include/c++/9/bits/stl_function.h:
 

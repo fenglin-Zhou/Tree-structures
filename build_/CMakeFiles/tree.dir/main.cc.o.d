@@ -137,7 +137,7 @@ CMakeFiles/tree.dir/main.cc.o: \
  /usr/include/c++/9/bits/basic_ios.tcc \
  /usr/include/c++/9/bits/ostream.tcc /usr/include/c++/9/istream \
  /usr/include/c++/9/bits/istream.tcc \
- /home/fenglin/githubdata/Tree-structures/avl_tree.hpp \
+ /home/fenglin/githubdata/Tree-structures/avl_tree.h \
  /usr/include/c++/9/memory /usr/include/c++/9/bits/stl_uninitialized.h \
  /usr/include/c++/9/utility /usr/include/c++/9/bits/stl_relops.h \
  /usr/include/c++/9/bits/stl_raw_storage_iter.h \
@@ -156,14 +156,14 @@ CMakeFiles/tree.dir/main.cc.o: \
  /usr/include/c++/9/backward/auto_ptr.h /usr/include/c++/9/bit \
  /usr/include/c++/9/pstl/glue_memory_defs.h \
  /usr/include/c++/9/pstl/execution_defs.h \
- /home/fenglin/githubdata/Tree-structures/node.hpp \
- /usr/include/c++/9/queue /usr/include/c++/9/deque \
- /usr/include/c++/9/bits/stl_deque.h /usr/include/c++/9/bits/deque.tcc \
- /usr/include/c++/9/vector /usr/include/c++/9/bits/stl_vector.h \
+ /home/fenglin/githubdata/Tree-structures/node.h /usr/include/c++/9/queue \
+ /usr/include/c++/9/deque /usr/include/c++/9/bits/stl_deque.h \
+ /usr/include/c++/9/bits/deque.tcc /usr/include/c++/9/vector \
+ /usr/include/c++/9/bits/stl_vector.h \
  /usr/include/c++/9/bits/stl_bvector.h /usr/include/c++/9/bits/vector.tcc \
  /usr/include/c++/9/bits/stl_queue.h \
- /home/fenglin/githubdata/Tree-structures/binary_search_tree.hpp \
- /home/fenglin/githubdata/Tree-structures/test.hpp \
- /home/fenglin/githubdata/Tree-structures/bplustree.hpp \
- /home/fenglin/githubdata/Tree-structures/btree.hpp \
- /home/fenglin/githubdata/Tree-structures/redblacktree.hpp
+ /home/fenglin/githubdata/Tree-structures/binary_search_tree.h \
+ /home/fenglin/githubdata/Tree-structures/test.h \
+ /home/fenglin/githubdata/Tree-structures/bplustree.h \
+ /home/fenglin/githubdata/Tree-structures/btree.h \
+ /home/fenglin/githubdata/Tree-structures/redblacktree.h

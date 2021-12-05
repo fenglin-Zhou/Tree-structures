@@ -22,19 +22,19 @@
 
 #include <iostream>
 
-#include "avl_tree.hpp"
-#include "binary_search_tree.hpp"
-#include "test.hpp"
+#include "avl_tree.h"
+#include "binary_search_tree.h"
+#include "test.h"
 
 int main() {
-  test_bst();
+  Test_BST();
   std::cout << std::endl;
-  test_avlt();
+  Test_AVLT();
   std::cout << std::endl;
-  test_btree();
+  Test_BTree();
   std::cout << std::endl;
-  test_bptree();
+  Test_BPTree();
   std::cout << std::endl;
-  test_rbtree();
+  Test_RBTree();
   return 0;
 }

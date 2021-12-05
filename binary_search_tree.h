@@ -27,7 +27,7 @@
 #include <memory>
 #include <queue>
 
-#include "node.hpp"
+#include "node.h"
 
 template <typename K, typename V>
 class BSTree {
