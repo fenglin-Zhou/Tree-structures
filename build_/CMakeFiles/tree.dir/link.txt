@@ -1,1 +1,0 @@
-/usr/bin/g++ CMakeFiles/tree.dir/main.cc.o -o tree  -lpthread 
