@@ -3,7 +3,7 @@ project(tree)
 set(CMAKE_CXX_STANDARD 20)
 
 find_package(Threads)
-add_executable(tree main.cc node.hpp 
-btree.hpp bplustree.hpp redblacktree.hpp
-binary_search_tree.hpp avl_tree.hpp test.hpp)
+add_executable(tree main.cc node.h 
+btree.h bplustree.h redblacktree.h
+binary_search_tree.h avl_tree.h test.h)
 target_link_libraries(tree ${CMAKE_THREAD_LIBS_INIT})

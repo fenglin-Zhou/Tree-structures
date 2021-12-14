@@ -82,7 +82,7 @@ void Test_BPTree() {
   // bptree.Remove(17);
   // bptree.Display();
   // bptree.Displaybylink();
-  BPTree<int, int> bpt(2);
+  BPTree<int, int> bpt(3);
   for (int i = 0; i < 10; ++i) {
     bpt.Insert(i * 2, i);
   }

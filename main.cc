@@ -27,14 +27,14 @@
 #include "test.h"
 
 int main() {
-  // Test_BST();
-  // std::cout << std::endl;
-  // Test_AVLT();
-  // std::cout << std::endl;
-  // Test_BTree();
-  // std::cout << std::endl;
+  Test_BST();
+  std::cout << std::endl;
+  Test_AVLT();
+  std::cout << std::endl;
+  Test_BTree();
+  std::cout << std::endl;
   Test_BPTree();
-  // std::cout << std::endl;
-  // Test_RBTree();
+  std::cout << std::endl;
+  Test_RBTree();
   return 0;
 }
